@@ -14,10 +14,12 @@ class ForumScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text('Forum'),
         actions: [
+          // logout button
           IconButton(
             icon: Icon(Icons.logout),
             onPressed: () => context.read<AuthService>().signOut(),
           ),
+          // account button
           IconButton(
             icon: Icon(Icons.account_circle),
             onPressed: () => Navigator.push(
@@ -104,7 +106,7 @@ class PostCard extends StatelessWidget {
     final now = DateTime.now();
     final postTime = timestamp.toDate();
     final difference = now.difference(postTime);
-
+    // fancier way to display time
     if (difference.inMinutes < 1) {
       return 'Just now';
     } else if (difference.inHours < 1) {

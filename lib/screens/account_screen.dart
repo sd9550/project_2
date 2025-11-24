@@ -26,13 +26,6 @@ class AccountScreen extends StatelessWidget {
             .doc(user.uid)
             .snapshots(),
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-              ),
-            );
-          }
 
           if (!snapshot.hasData || !snapshot.data!.exists) {
             return Center(
@@ -53,7 +46,7 @@ class AccountScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Profile Header
+                // profile Header
                 Card(
                   color: Colors.grey[900],
                   child: Padding(
@@ -98,7 +91,7 @@ class AccountScreen extends StatelessWidget {
 
                 SizedBox(height: 20),
 
-                // Account Information
+                // account Information
                 Text(
                   'Account Information',
                   style: TextStyle(

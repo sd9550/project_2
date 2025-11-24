@@ -16,6 +16,8 @@ void main() async {
 }
 
 class ForumApp extends StatelessWidget {
+  const ForumApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -26,11 +28,13 @@ class ForumApp extends StatelessWidget {
           initialData: null,
         ),
       ],
+      // currently uses dark theme
       child: MaterialApp(
         title: 'Forum App',
         theme: ThemeData.dark().copyWith(
           primaryColor: Colors.blue,
           scaffoldBackgroundColor: Colors.black,
+          // following line is currently broken
           //backgroundColor: Colors.black,
           cardColor: Colors.grey[900],
           appBarTheme: AppBarTheme(
