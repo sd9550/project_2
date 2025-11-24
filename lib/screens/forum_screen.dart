@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 import '../services/auth_service.dart';
+import 'account_screen.dart';
 
 class ForumScreen extends StatelessWidget {
   const ForumScreen({super.key});
@@ -16,6 +17,13 @@ class ForumScreen extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.logout),
             onPressed: () => context.read<AuthService>().signOut(),
+          ),
+          IconButton(
+            icon: Icon(Icons.account_circle),
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => AccountScreen()),
+            ),
           ),
         ],
       ),
@@ -110,6 +118,8 @@ class PostCard extends StatelessWidget {
 }
 
 class AddPostForm extends StatefulWidget {
+  const AddPostForm({super.key});
+
   @override
   _AddPostFormState createState() => _AddPostFormState();
 }
@@ -164,7 +174,7 @@ class _AddPostFormState extends State<AddPostForm> {
             child: TextField(
               controller: _messageController,
               decoration: InputDecoration(
-                hintText: 'Write a message...',
+                hintText: 'Write a message here',
                 border: OutlineInputBorder(),
               ),
             ),

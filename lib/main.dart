@@ -16,8 +16,6 @@ void main() async {
 }
 
 class ForumApp extends StatelessWidget {
-  const ForumApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -30,7 +28,36 @@ class ForumApp extends StatelessWidget {
       ],
       child: MaterialApp(
         title: 'Forum App',
-        theme: ThemeData(primarySwatch: Colors.blue),
+        theme: ThemeData.dark().copyWith(
+          primaryColor: Colors.blue,
+          scaffoldBackgroundColor: Colors.black,
+          //backgroundColor: Colors.black,
+          cardColor: Colors.grey[900],
+          appBarTheme: AppBarTheme(
+            backgroundColor: Colors.grey[900],
+            foregroundColor: Colors.white,
+          ),
+          textTheme: TextTheme(
+            bodyLarge: TextStyle(color: Colors.white),
+            bodyMedium: TextStyle(color: Colors.white),
+            titleLarge: TextStyle(color: Colors.white),
+            titleMedium: TextStyle(color: Colors.white),
+            titleSmall: TextStyle(color: Colors.white),
+          ),
+          inputDecorationTheme: InputDecorationTheme(
+            labelStyle: TextStyle(color: Colors.white70),
+            hintStyle: TextStyle(color: Colors.white54),
+            border: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.white54),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.white54),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.blue),
+            ),
+          ), dialogTheme: DialogThemeData(backgroundColor: Colors.grey[900]),
+        ),
         home: AuthenticationWrapper(),
       ),
     );

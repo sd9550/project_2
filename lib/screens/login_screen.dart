@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../services/auth_service.dart';
-import '../services/auth_service.dart';
 
 class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
+
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
@@ -57,6 +58,9 @@ class _LoginScreenState extends State<LoginScreen> {
           key: _formKey,
           child: Column(
             children: [
+              Text(
+                "Welcome to the Forum App",
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
               if (!_isLogin)
                 TextFormField(
                   controller: _usernameController,
