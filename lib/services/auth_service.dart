@@ -1,44 +1,44 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AuthService {
-  final GoogleSignIn _googleSignIn = GoogleSignIn.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  Stream<User?> get user => _auth.authStateChanges();
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<User?> signInWithGoogle() async {
-  }
+  Stream<User?> get authStateChanges => _auth.authStateChanges();
 
-  Future<User?> signInWithEmail(String email, String password) async {
-    try {
-      UserCredential result = await _auth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-      return result.user;
-    } catch (e) {
-      print("Sign in error: $e");
-      return null;
-    }
-  }
-
-  // Email & Password Sign Up
-  Future<User?> signUpWithEmail(String email, String password) async {
+  Future<String?> signUp(String email, String password, String username) async {
     try {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
-      return result.user;
-    } catch (e) {
-      print("Sign up error: $e");
+
+      await _firestore.collection('users').doc(result.user!.uid).set({
+        'username': username,
+        'email': email,
+        'createdAt': Timestamp.now(),
+      });
+
       return null;
+    } on FirebaseAuthException catch (e) {
+      return e.message;
+    }
+  }
+
+  Future<String?> signIn(String email, String password) async {
+    try {
+      await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      return null;
+    } on FirebaseAuthException catch (e) {
+      return e.message;
     }
   }
 
   Future<void> signOut() async {
     await _auth.signOut();
-    await _googleSignIn.signOut();
   }
-
 }
