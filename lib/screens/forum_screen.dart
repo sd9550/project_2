@@ -5,6 +5,8 @@ import 'package:provider/provider.dart';
 import '../services/auth_service.dart';
 
 class ForumScreen extends StatelessWidget {
+  const ForumScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -91,10 +93,19 @@ class PostCard extends StatelessWidget {
   }
 
   String _formatTimestamp(Timestamp timestamp) {
-    return DateTime.now()
-        .difference(timestamp.toDate())
-        .inHours
-        .toString();
+    final now = DateTime.now();
+    final postTime = timestamp.toDate();
+    final difference = now.difference(postTime);
+
+    if (difference.inMinutes < 1) {
+      return 'Just now';
+    } else if (difference.inHours < 1) {
+      return '${difference.inMinutes}m ago';
+    } else if (difference.inDays < 1) {
+      return '${difference.inHours}h ago';
+    } else {
+      return '${difference.inDays}d ago';
+    }
   }
 }
 
@@ -107,6 +118,25 @@ class _AddPostFormState extends State<AddPostForm> {
   final _messageController = TextEditingController();
   final _firestore = FirebaseFirestore.instance;
   final _auth = FirebaseAuth.instance;
+  String _username = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    final user = _auth.currentUser;
+    if (user != null) {
+      final userDoc = await _firestore.collection('users').doc(user.uid).get();
+      if (mounted) {
+        setState(() {
+          _username = userDoc.data()?['username'] ?? 'Unknown User';
+        });
+      }
+    }
+  }
 
   Future<void> _addPost() async {
     if (_messageController.text.isEmpty) return;
@@ -114,15 +144,10 @@ class _AddPostFormState extends State<AddPostForm> {
     final user = _auth.currentUser;
     if (user == null) return;
 
-    // Get user data
-    final userDoc = await _firestore.collection('users').doc(user.uid).get();
-    final username = userDoc.data()?['username'] ?? 'Anonymous';
-    //print("Message check in _AddPostFormState");
-
     await _firestore.collection('posts').add({
       'message': _messageController.text,
       'userId': user.uid,
-      'username': username,
+      'username': _username,
       'timestamp': Timestamp.now(),
     });
 
@@ -139,7 +164,7 @@ class _AddPostFormState extends State<AddPostForm> {
             child: TextField(
               controller: _messageController,
               decoration: InputDecoration(
-                hintText: 'Message',
+                hintText: 'Write a message...',
                 border: OutlineInputBorder(),
               ),
             ),
