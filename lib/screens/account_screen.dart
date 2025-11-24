@@ -119,9 +119,7 @@ class AccountScreen extends StatelessWidget {
                             createdAt != null
                                 ? _formatDate(createdAt.toDate())
                                 : 'Unknown'
-                        ),
-                        Divider(color: Colors.grey[700]),
-                        _buildInfoRow('Email Verified', user.emailVerified ? 'Yes' : 'No'),
+                        )
                       ],
                     ),
                   ),
@@ -137,7 +135,7 @@ class AccountScreen extends StatelessWidget {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.red,
                       foregroundColor: Colors.white,
-                      padding: EdgeInsets.symmetric(vertical: 16),
+                      padding: EdgeInsets.symmetric(vertical: 14),
                     ),
                     child: Text('Sign Out'),
                   ),
