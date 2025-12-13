@@ -1,8 +1,11 @@
+// main.dart
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:project_2/services/auth_service.dart';
 import 'package:provider/provider.dart';
+import 'package:project_2/services/theme_service.dart';
 import 'firebase_options.dart';
 import 'screens/login_screen.dart';
 import 'screens/forum_screen.dart';
@@ -23,46 +26,25 @@ class ForumApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         Provider<AuthService>(create: (_) => AuthService()),
-        StreamProvider(
+        StreamProvider<User?>( // Explicitly specify type here
           create: (context) => context.read<AuthService>().authStateChanges,
           initialData: null,
         ),
+        // Add the ThemeNotifier
+        ChangeNotifierProvider<ThemeNotifier>( // <--- ADD THIS
+          create: (_) => ThemeNotifier(), // <--- ADD THIS
+        ), // <--- ADD THIS
       ],
       // currently uses dark theme
-      child: MaterialApp(
-        title: 'Forum App',
-        theme: ThemeData.dark().copyWith(
-          primaryColor: Colors.blue,
-          scaffoldBackgroundColor: Colors.black,
-          // following line is currently broken
-          //backgroundColor: Colors.black,
-          cardColor: Colors.grey[900],
-          appBarTheme: AppBarTheme(
-            backgroundColor: Colors.grey[900],
-            foregroundColor: Colors.white,
-          ),
-          textTheme: TextTheme(
-            bodyLarge: TextStyle(color: Colors.white),
-            bodyMedium: TextStyle(color: Colors.white),
-            titleLarge: TextStyle(color: Colors.white),
-            titleMedium: TextStyle(color: Colors.white),
-            titleSmall: TextStyle(color: Colors.white),
-          ),
-          inputDecorationTheme: InputDecorationTheme(
-            labelStyle: TextStyle(color: Colors.white70),
-            hintStyle: TextStyle(color: Colors.white54),
-            border: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.white54),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.white54),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.blue),
-            ),
-          ), dialogTheme: DialogThemeData(backgroundColor: Colors.grey[900]),
-        ),
-        home: AuthenticationWrapper(),
+      child: Consumer<ThemeNotifier>( // <--- WRAP with CONSUMER
+        builder: (context, themeNotifier, child) {
+          return MaterialApp(
+            title: 'Forum App',
+            // Use the theme from the notifier
+            theme: themeNotifier.getTheme(), // <--- USE NOTIFIER'S THEME
+            home: AuthenticationWrapper(),
+          );
+        },
       ),
     );
   }
